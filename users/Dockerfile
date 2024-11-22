@@ -1,4 +1,5 @@
-FROM python3:11-slim-bullseye
+FROM python:3.11-slim-bullseye
+
 
 ENV PYTHONUNBUFFERED=1
 

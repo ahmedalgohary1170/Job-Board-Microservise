@@ -1,13 +1,15 @@
 
 services:
+
   users:
     build: ./users
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python runserver 0.0.0.0:8001"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
     ports:
       - 8001:8001
     container_name: UsersAPI
     volumes:
       - ./users:/app
+      - ./wait-for-it.sh:/wait-for-it.sh
     environment:
       - USERS_DB_NAME=users
       - USERS_DB_USER=postgres
@@ -20,12 +22,13 @@ services:
 
   jobs:
     build: ./jobs
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python runserver 0.0.0.0:8002"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
     ports:
       - 8002:8002
     container_name: JobssAPI
     volumes:
       - ./jobs:/app
+      - ./wait-for-it.sh:/wait-for-it.sh
     environment:
       - JOB_DB_NAME=jobs
       - JOB_DB_USER=postgres
@@ -39,12 +42,13 @@ services:
 
   blog:
     build: ./blog
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python runserver 0.0.0.0:8003"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8003"
     ports:
       - 8003:8003
     container_name: BlogAPI
     volumes:
       - ./blog:/app
+      - ./wait-for-it.sh:/wait-for-it.sh
     environment:
       - BLOG_DB_NAME=blog
       - BLOG_DB_USER=postgres
@@ -57,9 +61,9 @@ services:
   userDB:
     image: postgres:16
     environment:
-      - POSTGERS_DB=users
-      - POSTGERS_USER=postgres
-      - POSTGERS_PASSWORD=postgres
+      - POSTGRES_DB=users
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - users-data:/var/lib/postgresql/data
 
@@ -67,18 +71,18 @@ services:
   jobsDB:
     image: postgres:16
     environment:
-      - POSTGERS_DB=jobs
-      - POSTGERS_USER=postgres
-      - POSTGERS_PASSWORD=postgres
+      - POSTGRES_DB=jobs
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - jobs-data:/var/lib/postgresql/data
 
   blogDB:
     image: postgres:16
     environment:
-      - POSTGERS_DB=blog
-      - POSTGERS_USER=postgres
-      - POSTGERS_PASSWORD=postgres
+      - POSTGRES_DB=blog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - blog-data:/var/lib/postgresql/data
 
