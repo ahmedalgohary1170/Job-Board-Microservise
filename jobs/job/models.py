@@ -20,7 +20,7 @@ EDUCATION_TYPE = (
     ('Bachelor','Bachelor'),
     )
 
-EXPRIENCE_TYPE = (    
+EXPERIENCE_TYPE = (    
     ('NoExperience','NoExperience'),
     ('Junior','Junior'),
     ('MidLivil','MidLivil'),
@@ -33,7 +33,7 @@ class Job(models.Model):
     description = models.TextField(max_length=20000)
     job_type = models.CharField(choices=JOB_TYPE,max_length=20)
     education = models.CharField(choices=EDUCATION_TYPE,max_length=20)
-    exprience = models.CharField(choices=EXPRIENCE_TYPE,max_length=20)
+    exprience = models.CharField(choices=EXPERIENCE_TYPE,max_length=20)
     salary = models.IntegerField(null=True,blank=True)
     position = models.CharField(max_length=100)
     due_date = models.DateField()
