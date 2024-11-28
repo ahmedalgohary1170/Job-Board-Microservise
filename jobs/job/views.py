@@ -1,10 +1,15 @@
 from rest_framework import generics
-
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 from .models import Job , JobApply
 from .serializers import JobApplySerializers,JobSerializers
+
+# pagination
+from .pagination import Jobspagination
+
+# filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from .filters import JobFilter
+
 
 
 class JobListCreateAPI(generics.ListCreateAPIView):
@@ -12,6 +17,7 @@ class JobListCreateAPI(generics.ListCreateAPIView):
     serializer_class = JobSerializers
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
     filterset_class = JobFilter
+    pagination_class = Jobspagination
 
 class JobDetailUpdateDeleteAPI(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
