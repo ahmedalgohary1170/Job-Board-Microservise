@@ -12,12 +12,10 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from .models import CustomUser 
 from .serializers import UserSerializer
-
 
 
 user = get_user_model() # get CustomUser
@@ -33,17 +31,19 @@ class UserLoginAPI(ObtainAuthToken):
 
 
 class UserLogoutAPI(APIView):
-
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
 
 
 class ChangePasswordAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
     def put(self, request, *args, **kwargs):
         user = request.user
         data = request.data
-        if not user.chack_password(data.get('old_password')):
+        if not user.check_password(data.get('old_password')):
             return Response({'message':'old password was wrong'},status=status.HTTP_400_BAD_REQUEST)
         
         # update password
@@ -56,7 +56,7 @@ class ResendActivationCodeAPI(APIView):
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
         try:
-            user = user.object.get(email=email)
+            user = user.objects.get(email=email)
         except Exception as e:
             return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)
 
@@ -71,7 +71,7 @@ class ResendActivationCodeAPI(APIView):
         message = render_to_string('accounts/activate_email.html',{
             'user':user,
             'domain':current_site.domain,
-            'uid':urlsafe_base64_decode(force_bytes(user.id)),
+            'uid': urlsafe_base64_encode(force_bytes(user.id)),
             'token':default_token_generator.make_token(user)
         })
         to_email = user.email
@@ -83,7 +83,7 @@ class ResetPasswordAPI(APIView):
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
         try:
-            user = user.object.get(email=email)
+            user = user.objects.get(email=email)
         except Exception as e:
             return Response({'error':e},status=status.HTTP_400_BAD_REQUEST)
 
@@ -96,7 +96,7 @@ class ResetPasswordAPI(APIView):
         message = render_to_string('accounts/password_reset_email.html',{
             'user':user,
             'domain':current_site.domain,
-            'uid':urlsafe_base64_decode(force_bytes(user.id)),
+            'uid':urlsafe_base64_encode(force_bytes(user.id)),
             'token':default_token_generator.make_token(user)
         })
         to_email = user.email
@@ -105,6 +105,7 @@ class ResetPasswordAPI(APIView):
 
 
 class UserSingupAPI(APIView):
+
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -120,7 +121,7 @@ class UserSingupAPI(APIView):
             message = render_to_string('accounts/activate_email.html',{
                 'user':user,
                 'domain':current_site.domain,
-                'uid':urlsafe_base64_decode(force_bytes(user.id)),
+                'uid':urlsafe_base64_encode(force_bytes(user.id)),
                 'token':default_token_generator.make_token(user)
             })
             to_email = user.email
@@ -130,6 +131,8 @@ class UserSingupAPI(APIView):
 
 
 class UserProfileAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         user = request.user
         serializer = UserSerializer(user)
