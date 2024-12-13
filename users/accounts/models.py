@@ -16,7 +16,7 @@ class CustomUserManager(BaseUserManager):
     
         email = self.normalize_email(email)
         user = self.model(email=email,**extra_fields)
-        user.set_password(password=password)
+        user.set_password(password)
         user.save(using=self.db)
         return user
 
@@ -36,7 +36,7 @@ class CustomUser(AbstractUser):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='users/')
+    image = models.ImageField(upload_to='users/',blank=True,null=True)
     
 
     USERNAME_FIELD = 'email' # login with email

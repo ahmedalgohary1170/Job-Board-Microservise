@@ -3,6 +3,7 @@ services:
 
   users:
     build: ./users
+    # command: bash -c "python manage.py runserver 0.0.0.0:8001"
     command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8001"
     ports:
       - 8001:8001
@@ -22,8 +23,8 @@ services:
 
   jobs:
     build: ./jobs
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
-    # command: bash -c "python manage.py makemigrations && python manage.py migrate && python dummy_data.py && python manage.py runserver 0.0.0.0:8002"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python dummy_data.py && python manage.py runserver 0.0.0.0:8002"
+    # command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
     ports:
       - 8002:8002
     container_name: JobssAPI
@@ -43,7 +44,8 @@ services:
 
   blog:
     build: ./blog
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8003"
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python dummy_data.py && python manage.py runserver 0.0.0.0:8003"
+    # command: bash -c "python manage.py makemigrations && python manage.py migrate  && python manage.py runserver 0.0.0.0:8003"
     ports:
       - 8003:8003
     container_name: BlogAPI

@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from models import CustomUser 
+from .models import CustomUser 
 from .serializers import UserSerializer
 
 
@@ -25,7 +25,7 @@ user = get_user_model() # get CustomUser
 
 class UserLoginAPI(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        serializer = self .serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user'] # user=email
         token,created = Token.objects.get_or_create(user=user)
