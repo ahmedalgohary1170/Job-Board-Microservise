@@ -1,6 +1,8 @@
+import JobsFilter from "@/components/jobs/jobsFilter"
+import JobsList from "@/components/jobs/jobsList"
 
 
-function JobList(){
+function JobListPage(){
     // logic
 
 
@@ -8,9 +10,11 @@ function JobList(){
     return(
         <div>
             <h3> Job List </h3>
+            <JobsList/>
+            <JobsFilter/>
         </div>
     )
 
 }
 
-export default JobList
+export default JobListPage
